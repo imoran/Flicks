@@ -2,17 +2,20 @@
 //  MovieCell.swift
 //  MovieViewer
 //
-//  Created by Isis  on 1/5/16.
+//  Created by Isis Moran on 1/5/16.
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
 import UIKit
 
 class MovieCell: UITableViewCell {
-
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var overviewLabel: UILabel!
+    @IBOutlet weak var posterView: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
