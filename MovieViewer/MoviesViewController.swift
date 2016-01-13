@@ -108,9 +108,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         if let posterPath = movie["poster_path"] as? String {
             cell.posterView.setImageWithURL(imageUrl!)
         }
-        
-        return cell
-        
         print("row\(indexPath.row)")
         return cell
     }
