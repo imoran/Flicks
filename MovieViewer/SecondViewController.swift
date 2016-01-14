@@ -6,14 +6,16 @@
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
-import PKHUD
 import UIKit
+import PKHUD
 import AFNetworking
 
 class SecondViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
  
     @IBOutlet weak var collectionView: UICollectionView!
     
+    var refreshControl: UIRefreshControl!
+    let delay = 3.0 * Double(NSEC_PER_SEC)
     var movies: [NSDictionary]?
     
     override func viewDidLoad() {
@@ -31,6 +33,11 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
             PKHUD.sharedHUD.hide(afterDelay: 2.0)
         }
+        
+        refreshControl = UIRefreshControl()
+        collectionView.addSubview(refreshControl)
+        
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -60,6 +67,21 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
+    }
+    
+    func delay(delay:Double, closure:() -> ()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
+    }
+    
+    func onRefresh() {
+        delay(2, closure: {
+            self.refreshControl.endRefreshing()
+        })
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
