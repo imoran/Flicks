@@ -6,33 +6,43 @@
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
+import PKHUD
 import UIKit
 import AFNetworking
-
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     var refreshControl: UIRefreshControl!
     let delay = 3.0 * Double(NSEC_PER_SEC)
     var movies: [NSDictionary]?
-    let indicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+//    let indicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
     
     var searchActive: Bool = false
     var filteredData: [String]!
     
-
     @IBOutlet weak var movieSearch: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+         PKHUD.sharedHUD.contentView = PKHUDProgressView()
+         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+         PKHUD.sharedHUD.dimsBackground = true
+         PKHUD.sharedHUD.show()
+            
+         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
+            
+         dispatch_after(delayTime, dispatch_get_main_queue()) {
+             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+             PKHUD.sharedHUD.hide(afterDelay: 2.0)
+             }
         
-        indicator.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0)
+//        indicator.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0)
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
-        tableView.addSubview(indicator)
-        indicator.startAnimating()
+//        tableView.addSubview(indicator)
+//        indicator.startAnimating()
         
 //        refreshControl.backgroundColor = UIColor.grayColor()
 //        refreshControl.tintColor = UIColor.blackColor()
@@ -41,7 +51,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
         tableView.dataSource = self
         tableView.delegate = self
-        indicator.center = tableView.center
+//        indicator.center = tableView.center
         
 //        movieSearch.delegate = self
         
@@ -63,7 +73,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             self.tableView.reloadData()
-//                            self.indicator.stopAnimating()
                             
                     }
                 }
@@ -74,6 +83,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+//        self.indicator.stopAnimating()
     }
     
     func delay(delay:Double, closure:() -> ()) {
@@ -116,15 +129,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         view.endEditing(true)
     }
     
-    
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if let movies = movies {
             return movies.count
         } else {
             return 0
-        
     }
-  }
+}
 }

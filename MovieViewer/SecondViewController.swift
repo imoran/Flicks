@@ -6,6 +6,7 @@
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
+import PKHUD
 import UIKit
 import AFNetworking
 
@@ -19,6 +20,17 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         super.viewDidLoad()
         collectionView.dataSource = self
         
+        PKHUD.sharedHUD.contentView = PKHUDProgressView()
+        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+        PKHUD.sharedHUD.dimsBackground = true
+        PKHUD.sharedHUD.show()
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+            PKHUD.sharedHUD.hide(afterDelay: 2.0)
+        }
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
