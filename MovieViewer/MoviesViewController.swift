@@ -12,16 +12,13 @@ import AFNetworking
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    @IBOutlet weak var movieSearch: UISearchBar!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
     let delay = 3.0 * Double(NSEC_PER_SEC)
     var movies: [NSDictionary]?
-//    let indicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-    
-    var searchActive: Bool = false
-    var filteredData: [String]!
-    
-    @IBOutlet weak var movieSearch: UISearchBar!
-    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,22 +35,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
              PKHUD.sharedHUD.hide(afterDelay: 2.0)
              }
         
-//        indicator.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0)
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
-//        tableView.addSubview(indicator)
-//        indicator.startAnimating()
         
-//        refreshControl.backgroundColor = UIColor.grayColor()
-//        refreshControl.tintColor = UIColor.blackColor()
+        refreshControl.backgroundColor = UIColor.grayColor()
+        refreshControl.tintColor = UIColor.darkGrayColor()
+        UITabBar.appearance().tintColor = UIColor(red: 49, green: 79, blue: 79, alpha: 1.0)
+        
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
 
         tableView.dataSource = self
         tableView.delegate = self
-//        indicator.center = tableView.center
-        
-//        movieSearch.delegate = self
+        movieSearch.delegate = self
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -69,16 +63,33 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            NSLog("response: \(responseDictionary)")
                             
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            self.tableView.reloadData()
                             
                     }
+                    
+                    self.filteredData = self.movies
+                    self.tableView.reloadData()
+
                 }
         });
         task.resume()
 
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
+            return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            })
+            self.tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        
+    }
+    
+    func searchBar(searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -86,7 +97,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     override func viewDidAppear(animated: Bool) {
-//        self.indicator.stopAnimating()
     }
     
     func delay(delay:Double, closure:() -> ()) {
@@ -107,7 +117,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
-        let movie = movies![indexPath.row]
+        let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"]
         let posterPath = movie["poster_path"] as! String
@@ -121,7 +131,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         if let posterPath = movie["poster_path"] as? String {
             cell.posterView.setImageWithURL(imageUrl!)
         }
-        print("row\(indexPath.row)")
         return cell
     }
     
@@ -131,10 +140,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if let movies = movies {
-            return movies.count
+        if let filteredData = filteredData {
+            return filteredData.count
         } else {
             return 0
-    }
-}
+  }
+ }
 }

@@ -10,18 +10,19 @@ import UIKit
 import PKHUD
 import AFNetworking
 
-class SecondViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SecondViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate {
  
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var movieSearcher: UISearchBar!
     
+    var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
     let delay = 3.0 * Double(NSEC_PER_SEC)
     var movies: [NSDictionary]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.dataSource = self
-        
+ 
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
         PKHUD.sharedHUD.dimsBackground = true
@@ -38,6 +39,9 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.addSubview(refreshControl)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        
+        collectionView.dataSource = self
+        movieSearcher.delegate = self
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -58,12 +62,21 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
+                    self.filteredData = self.movies
+                    self.collectionView.reloadData()
                 }
         });
         task.resume()
 
     }
     
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
+            return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+        })
+        self.collectionView.reloadData()
+}
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -86,17 +99,23 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if let movies = movies {
-            return movies.count
+        if let filteredData = filteredData {
+            return filteredData.count
         } else {
             return 0
         }
         
     }
     
+    
+    @IBAction func onTap(sender: AnyObject) {
+        view.endEditing(true)
+    }
+    
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("movieCollection", forIndexPath: indexPath) as! MovieCollectionViewCell
-        let movie = movies![indexPath.row]
+        let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
         let posterPath = movie["poster_path"] as! String
         

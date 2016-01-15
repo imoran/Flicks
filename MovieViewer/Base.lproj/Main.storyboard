@@ -14,7 +14,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="138" sectionHeaderHeight="28" sectionFooterHeight="28" id="erz-SV-ezh">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="60" width="320" height="508"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -22,6 +22,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <animations/>
+                                    <color key="barTintColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </searchBar>
                                 <prototypes>
@@ -64,6 +65,12 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view contentMode="scaleToFill" id="XPi-zu-CGP">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -72,7 +79,7 @@
                             <outletCollection property="gestureRecognizers" destination="oeS-mv-7yp" appends="YES" id="JOD-z2-RbO"/>
                         </connections>
                     </view>
-                    <tabBarItem key="tabBarItem" title="TableView" id="bHS-5Z-5YN"/>
+                    <tabBarItem key="tabBarItem" title="TableView" selectedImage="cross" id="bHS-5Z-5YN"/>
                     <navigationItem key="navigationItem" id="Xrm-M6-tM8">
                         <barButtonItem key="rightBarButtonItem" title="Item" id="6Kf-hp-53P"/>
                     </navigationItem>
@@ -88,7 +95,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2247" y="-174"/>
+            <point key="canvasLocation" x="1989" y="-204"/>
         </scene>
         <!--CollectionView-->
         <scene sceneID="FYv-EJ-YmE">
@@ -99,25 +106,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" indicatorStyle="black" dataMode="prototypes" id="CvX-cI-h48">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="103" width="320" height="465"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <animations/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ1-k7-O7i">
-                                    <size key="itemSize" width="97" height="141"/>
+                                    <size key="itemSize" width="97" height="155"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="movieCollection" id="ZT6-5q-yWo" customClass="MovieCollectionViewCell" customModule="MovieViewer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="97" height="141"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="97" height="155"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="97" height="141"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="97" height="155"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="KFl-nz-8Lk">
-                                                    <rect key="frame" x="-2" y="0.0" width="99" height="141"/>
+                                                    <rect key="frame" x="-2" y="0.0" width="99" height="155"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <animations/>
                                                 </imageView>
@@ -132,18 +139,41 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <searchBar contentMode="redraw" id="w0f-9l-NQG">
+                                <rect key="frame" x="0.0" y="59" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <animations/>
+                                <color key="barTintColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <view contentMode="scaleToFill" id="qTB-TR-Mz8">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <animations/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="HxA-pT-ZL4" appends="YES" id="2kf-3K-7zq"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="CollectionView" id="egX-b1-m2C"/>
                     <navigationItem key="navigationItem" id="r0r-8M-oPG"/>
                     <connections>
                         <outlet property="collectionView" destination="CvX-cI-h48" id="lft-1e-wS7"/>
+                        <outlet property="movieSearcher" destination="w0f-9l-NQG" id="lrL-Ve-cgW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="79n-DT-qo2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="HxA-pT-ZL4">
+                    <connections>
+                        <action selector="onTap:" destination="TOk-Q7-6Z8" id="oyI-gF-r6n"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2343" y="-211"/>
+            <point key="canvasLocation" x="2313" y="-204"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="ksv-JL-hAc">
@@ -165,4 +195,7 @@
             <point key="canvasLocation" x="1715" y="-174"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="cross" width="62" height="62"/>
+    </resources>
 </document>
