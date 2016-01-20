@@ -23,18 +23,20 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] User can choose between TableView and CollectionView
+- [x] User can also view Top Rated Movies using the TabView
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-![Walkthrough](MovieDatabaseSimple2.gif)
+![Walkthrough](MovieDatabaseSimple3.gif)
+ 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
-
+** Still need to fix the UI, I know it looks awful right now.
 Describe any challenges encountered while building the app.
 
 ## License
