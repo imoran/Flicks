@@ -130,10 +130,11 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="iGv-lr-ma8"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwQ-FS-n8b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6197" y="507"/>
+            <point key="canvasLocation" x="6196" y="529"/>
         </scene>
         <!--Top Rated View Controller-->
         <scene sceneID="dMR-dv-aJq">
@@ -261,6 +262,7 @@
                                         <animations/>
                                         <connections>
                                             <outlet property="topPosterView" destination="vR8-e6-HyI" id="38t-jH-eGo"/>
+                                            <segue destination="736-mk-JDG" kind="push" identifier="topMovieSegue" id="cLF-QB-udC"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

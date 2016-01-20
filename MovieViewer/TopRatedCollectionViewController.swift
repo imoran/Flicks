@@ -32,7 +32,6 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-            PKHUD.sharedHUD.hide(afterDelay: 2.0)
         }
         
         refreshControl = UIRefreshControl()
@@ -59,13 +58,15 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                             NSLog("response: \(responseDictionary)")
-                            
+                            PKHUD.sharedHUD.hide()
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
                     self.filteredData = self.movies
                     self.topCollectionView.reloadData()
                 }
+                
+
         });
         task.resume()
         
@@ -97,6 +98,10 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         })
     }
     
+    func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
+        self.performSegueWithIdentifier("topMovieSegue", sender: self)
+    }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = topCollectionView.dequeueReusableCellWithReuseIdentifier("TopCollectionCell", forIndexPath: indexPath) as! TopCollectionCell
         let movie = filteredData[indexPath.row]
@@ -117,6 +122,17 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         view.endEditing(true)
         
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "topMovieSegue" {
+            if let indexPath = self.topCollectionView?.indexPathForCell(sender as! TopCollectionCell) {
+                let detailVC = segue.destinationViewController as! MovieDetailsViewController
+                detailVC.cell = filteredData[indexPath]
+            }
+            
+        }
+        
+
     
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

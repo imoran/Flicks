@@ -32,7 +32,6 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-            PKHUD.sharedHUD.hide(afterDelay: 2.0)
         }
         
         refreshControl = UIRefreshControl()
@@ -58,7 +57,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                             NSLog("response: \(responseDictionary)")
-                            
+                            PKHUD.sharedHUD.hide()
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
