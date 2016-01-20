@@ -14,6 +14,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var movieSearch: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var networkErrorView: UIView!
     
     var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
@@ -22,6 +23,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//          UITabBar.appearance().barTintColor = UIColor.blackColor()
         
          PKHUD.sharedHUD.contentView = PKHUDProgressView()
          PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
@@ -40,8 +42,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         refreshControl.backgroundColor = UIColor.grayColor()
         refreshControl.tintColor = UIColor.darkGrayColor()
-        UITabBar.appearance().tintColor = UIColor(red: 49, green: 79, blue: 79, alpha: 1.0)
-        
+//        UITabBar.appearance().tintColor = UIColor(red: 49, green: 79, blue: 79, alpha: 1.0)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
 
@@ -74,6 +75,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
         });
         task.resume()
+        
+        if Reachability.isConnectedToNetwork() == true {
+            networkErrorView.hidden = true
+        } else {
+            print("Internet connection FAILED")
+            networkErrorView.hidden = false
+        }
 
     }
     
@@ -84,13 +92,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView.reloadData()
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        
-    }
-    
-    func searchBar(searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        
-    }
+//    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+//        
+//    }
+//    
+//    func searchBar(searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+//        
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -119,20 +127,43 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
-        let overview = movie["overview"]
+//        let overview = movie["overview"]
         let posterPath = movie["poster_path"] as! String
+        let popularity = movie["popularity"] as! Double
+        let voterAverage = movie["vote_average"] as! Double
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
+        let request = NSURLRequest(URL: imageUrl!)
+//        let placeholder = UIImage(named: "clapperboard")
         
         cell.titleLabel.text = title as String
-        cell.overviewLabel.text = overview as? String
+//        cell.overviewLabel.text = overview as? String
+        cell.popularityLabel.text = popularity as? String
+        cell.voterAvgLabel.text = voterAverage as? String
         
         if let posterPath = movie["poster_path"] as? String {
             cell.posterView.setImageWithURL(imageUrl!)
         }
+        
+        cell.posterView.setImageWithURLRequest(request, placeholderImage: UIImage(named: "clapperboard"), success: { (request, imageResponse, image) -> Void in
+            if imageResponse != nil {
+                print("Image was not cached, fade in image")
+                cell.posterView.alpha = 0.0
+                cell.posterView.image = image
+                UIView.animateWithDuration(0.3, animations: {() -> Void in
+                    cell.posterView.alpha = 1.0
+                })
+            } else {
+                print("Image was cached so just update the image")
+                cell.posterView.image = image
+            }
+        }) { (imageRequest, imageResponse, error) -> Void in
+            
+        }
         return cell
     }
+    
     
     @IBAction func onTap(sender: AnyObject) {
         view.endEditing(true)
@@ -144,6 +175,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             return filteredData.count
         } else {
             return 0
+        
   }
  }
 }

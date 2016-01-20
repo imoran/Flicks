@@ -1,8 +1,8 @@
 //
-//  SecondViewController.swift
+//  TopRatedCollectionViewController.swift
 //  MovieViewer
 //
-//  Created by Isis Moran on 1/12/16.
+//  Created by Isis Moran on 1/19/16.
 //  Copyright © 2016 codepath. All rights reserved.
 //
 
@@ -10,10 +10,10 @@ import UIKit
 import PKHUD
 import AFNetworking
 
-class SecondViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate {
- 
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var movieSearcher: UISearchBar!
+class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate {
+    
+    @IBOutlet weak var topCollectionView: UICollectionView!
+    @IBOutlet weak var topMovieCollectionSearcher: UISearchBar!
     
     var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
@@ -22,7 +22,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
         PKHUD.sharedHUD.dimsBackground = true
@@ -36,15 +36,16 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         
         refreshControl = UIRefreshControl()
-        collectionView.addSubview(refreshControl)
+        topCollectionView.addSubview(refreshControl)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         
-        collectionView.dataSource = self
-        movieSearcher.delegate = self
+        topCollectionView.dataSource = self
+        topCollectionView.delegate = self
+        topMovieCollectionSearcher.delegate = self
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string:"http://api.themoviedb.org/3/movie/top_rated?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -63,23 +64,22 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
                             
                     }
                     self.filteredData = self.movies
-                    self.collectionView.reloadData()
+                    self.topCollectionView.reloadData()
                 }
         });
         task.resume()
-
+        
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
         })
-        self.collectionView.reloadData()
-}
+        self.topCollectionView.reloadData()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
     
     func delay(delay:Double, closure:() -> ()) {
@@ -97,51 +97,33 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         })
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if let filteredData = filteredData {
-            return filteredData.count
-        } else {
-            return 0
-        }
-        
-    }
-    
-    
-    @IBAction func onTap(sender: AnyObject) {
-        view.endEditing(true)
-    }
-//    
-//    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-//        
-//        self.performSegueWithIdentifier("showImage", sender: self)
-//    }
-
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        let cell = sender as! UICollectionViewCell
-//        let indexPath = collectionView.indexPathForCell(cell)
-//        let movie = movies![indexPath!.row]
-//        
-//        let movieDetailsViewController = segue.destinationViewController as! MovieDetailsViewController
-////        MovieDetailsViewController.movie = movie
-//        
-//    }
-
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("movieCollection", forIndexPath: indexPath) as! MovieCollectionViewCell
+        let cell = topCollectionView.dequeueReusableCellWithReuseIdentifier("TopCollectionCell", forIndexPath: indexPath) as! TopCollectionCell
         let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
         let posterPath = movie["poster_path"] as! String
-        
+            
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
-                
-        if let posterPath = movie["poster_path"] as? String {
-            cell.posterImage.setImageWithURL(imageUrl!)
-        }
         
-        return cell
+        if let posterPath = movie["poster_path"] as? String {
+               cell.topPosterView.setImageWithURL(imageUrl!)
+            }
+            
+            return cell
+        }
+
+    @IBAction func onTap(sender: AnyObject) {
+        view.endEditing(true)
+        
+    }
     
+
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+         if let filteredData = filteredData {
+           return filteredData.count
+         } else {
+           return 0
+        }
     }
 }
-        
