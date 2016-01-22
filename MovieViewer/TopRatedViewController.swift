@@ -29,10 +29,10 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         PKHUD.sharedHUD.show()
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
-        
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-        }
+//        
+//        dispatch_after(delayTime, dispatch_get_main_queue()) {
+//            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+//        }
         
         refreshControl = UIRefreshControl()
         toptableView.addSubview(refreshControl)
@@ -58,7 +58,8 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.hide(afterDelay: 2.0)
+                            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
@@ -100,7 +101,6 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         })
     }
     
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if let filteredData = filteredData  {
@@ -118,12 +118,17 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         let movie =  filteredData[indexPath.row]
         let title = movie["title"] as! String
         let posterPath = movie["poster_path"] as! String
+        let popularity = movie["popularity"] as? Float
+        let voterAverage = movie["vote_average"] as? Float
+        
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
 //        let request = NSURLRequest(URL: imageUrl!)
         
         cell.topTitleLabel.text = title as String
+        cell.popularityLabel.text = "Popularity: " + String(format: "%.2f%", popularity!)
+        cell.voterAvgLabel.text = "Voter Average: " + String(format: "%.2f", voterAverage!)
         
         if let posterPath = movie["poster_path"] as? String {
             cell.topPosterView.setImageWithURL(imageUrl!)
@@ -131,10 +136,14 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
 
         return cell
     }
-    
-    @IBAction func onTap(sender: AnyObject) {
-        view.endEditing(true)
-    }
-    
+//    
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        if segue.identifier == "topMovieSegue" {
+//            if let indexPath = self.topCollectionView?.indexPathForCell((sender as? TopCollectionCell)!)! {
+//                let detailVC = segue.destinationViewController as! MovieDetailsViewController
+//                
+            }
+//        }
+//    }
 
-}
+//}

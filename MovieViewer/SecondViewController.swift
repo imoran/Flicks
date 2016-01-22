@@ -30,10 +30,6 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
         
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-        }
-        
         refreshControl = UIRefreshControl()
         collectionView.addSubview(refreshControl)
         
@@ -57,7 +53,9 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                             NSLog("response: \(responseDictionary)")
-                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.hide(afterDelay: 1.5)
+                            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
@@ -105,26 +103,6 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         
     }
-    
-    
-    @IBAction func onTap(sender: AnyObject) {
-        view.endEditing(true)
-    }
-//    
-//    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-//        
-//        self.performSegueWithIdentifier("showImage", sender: self)
-//    }
-
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        let cell = sender as! UICollectionViewCell
-//        let indexPath = collectionView.indexPathForCell(cell)
-//        let movie = movies![indexPath!.row]
-//        
-//        let movieDetailsViewController = segue.destinationViewController as! MovieDetailsViewController
-////        MovieDetailsViewController.movie = movie
-//        
-//    }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("movieCollection", forIndexPath: indexPath) as! MovieCollectionViewCell
@@ -142,5 +120,17 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         return cell
     
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "MovieSegue" {
+            if let indexPath = self.collectionView?.indexPathForCell((sender as? MovieCollectionViewCell)!) {
+                let detailVC = segue.destinationViewController as! TableViewMovieDetailsViewController
+                detailVC.tableFilteredDict = self.filteredData[indexPath.row]
+                
+            }
+        }
+    }
+    
+    
 }
         

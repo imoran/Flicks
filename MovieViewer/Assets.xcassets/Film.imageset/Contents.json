@@ -2,12 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "CollectionView.png",
+      "filename" : "iconmonstr-video-4-32.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "TableView.png",
       "scale" : "2x"
     },
     {

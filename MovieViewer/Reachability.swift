@@ -2,7 +2,7 @@
 //  Reachability.swift
 //  MovieViewer
 //
-//  Created by Isis  on 1/18/16.
+//  Created by Isis Moran on 1/18/16.
 //  Copyright © 2016 codepath. All rights reserved.
 //
 

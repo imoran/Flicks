@@ -30,9 +30,9 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
         
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-        }
+//        dispatch_after(delayTime, dispatch_get_main_queue()) {
+//            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+//        }
         
         refreshControl = UIRefreshControl()
         topCollectionView.addSubview(refreshControl)
@@ -58,7 +58,9 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                             NSLog("response: \(responseDictionary)")
-                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.hide(afterDelay: 1.5)
+                            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
@@ -97,11 +99,7 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
             self.refreshControl.endRefreshing()
         })
     }
-    
-    func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("topMovieSegue", sender: self)
-    }
-    
+        
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = topCollectionView.dequeueReusableCellWithReuseIdentifier("TopCollectionCell", forIndexPath: indexPath) as! TopCollectionCell
         let movie = filteredData[indexPath.row]
@@ -118,23 +116,15 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
             return cell
         }
 
-    @IBAction func onTap(sender: AnyObject) {
-        view.endEditing(true)
-        
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "topMovieSegue" {
-            if let indexPath = self.topCollectionView?.indexPathForCell(sender as! TopCollectionCell) {
+            if let indexPath = self.topCollectionView?.indexPathForCell((sender as? TopCollectionCell)!) {
                 let detailVC = segue.destinationViewController as! MovieDetailsViewController
-                detailVC.cell = filteredData[indexPath]
+                detailVC.filteredDict = self.filteredData[indexPath.row]
             }
-            
         }
-        
-
+    }
     
-
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
          if let filteredData = filteredData {
            return filteredData.count
@@ -142,4 +132,4 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
            return 0
         }
     }
-}
+  }

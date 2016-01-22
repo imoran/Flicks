@@ -31,18 +31,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
          PKHUD.sharedHUD.show()
             
          let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
-            
-         dispatch_after(delayTime, dispatch_get_main_queue()) {
-             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-             PKHUD.sharedHUD.hide(afterDelay: 2.0)
-             }
-        
+
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
         
         refreshControl.backgroundColor = UIColor.grayColor()
         refreshControl.tintColor = UIColor.darkGrayColor()
-//        UITabBar.appearance().tintColor = UIColor(red: 49, green: 79, blue: 79, alpha: 1.0)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
 
@@ -64,7 +58,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            
+                            PKHUD.sharedHUD.hide(afterDelay: 1.5)
+                            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
                             self.movies = responseDictionary["results"] as? [NSDictionary]
                             
                     }
@@ -76,13 +71,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         });
         task.resume()
         
-        if Reachability.isConnectedToNetwork() == true {
-            networkErrorView.hidden = true
-        } else {
-            print("Internet connection FAILED")
-            networkErrorView.hidden = false
-        }
-
+//        if Reachability.isConnectedToNetwork() == true {
+//            networkErrorView.hidden = true
+//        } else {
+//            print("Internet connection FAILED")
+//            networkErrorView.hidden = false
+//        }
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
@@ -91,14 +85,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             })
             self.tableView.reloadData()
     }
-    
-//    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-//        
-//    }
-//    
-//    func searchBar(searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-//        
-//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -129,8 +115,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let title = movie["title"] as! String
 //        let overview = movie["overview"]
         let posterPath = movie["poster_path"] as! String
-        let popularity = movie["popularity"] as! Double
-        let voterAverage = movie["vote_average"] as! Double
+        let popularity = movie["popularity"] as? Float
+        let voterAverage = movie["vote_average"] as? Float
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
@@ -139,8 +125,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         cell.titleLabel.text = title as String
 //        cell.overviewLabel.text = overview as? String
-        cell.popularityLabel.text = popularity as? String
-        cell.voterAvgLabel.text = voterAverage as? String
+        cell.popularityLabel.text = "Popularity: " + String(format: "%.2f", popularity!)
+        cell.voterAvgLabel.text = "Voter Average: " + String(format: "%.2f", voterAverage!)
         
         if let posterPath = movie["poster_path"] as? String {
             cell.posterView.setImageWithURL(imageUrl!)
@@ -162,11 +148,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             
         }
         return cell
-    }
-    
-    
-    @IBAction func onTap(sender: AnyObject) {
-        view.endEditing(true)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
