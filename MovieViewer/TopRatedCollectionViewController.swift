@@ -28,7 +28,7 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.show()
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
+//        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
         
 //        dispatch_after(delayTime, dispatch_get_main_queue()) {
 //            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
@@ -75,10 +75,16 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        topMovieCollectionSearcher.showsCancelButton = true
         filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
         })
         self.topCollectionView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        view.endEditing(true)
+        topMovieCollectionSearcher.showsCancelButton = false
     }
 
     override func didReceiveMemoryWarning() {

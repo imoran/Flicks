@@ -12,6 +12,7 @@ import AFNetworking
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    @IBOutlet weak var errorView: UIView!
     @IBOutlet weak var movieSearch: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorView: UIView!
@@ -23,21 +24,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//          UITabBar.appearance().barTintColor = UIColor.blackColor()
+        
+        self.errorView.hidden = true
         
          PKHUD.sharedHUD.contentView = PKHUDProgressView()
          PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
          PKHUD.sharedHUD.dimsBackground = true
          PKHUD.sharedHUD.show()
-            
-         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
 
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
-        
-        refreshControl.backgroundColor = UIColor.grayColor()
-        refreshControl.tintColor = UIColor.darkGrayColor()
-        
+                
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
 
         tableView.dataSource = self
@@ -58,32 +55,35 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
+                            NSLog("response: \(responseDictionary)")
                             PKHUD.sharedHUD.hide(afterDelay: 1.5)
                             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            
-                    }
-                    
-                    self.filteredData = self.movies
-                    self.tableView.reloadData()
+                            self.filteredData = self.movies
+                            self.tableView.reloadData()
+                            self.errorView.hidden = true
+                    } else {
+                        self.errorView.hidden = false
 
+                    }
                 }
         });
         task.resume()
         
-//        if Reachability.isConnectedToNetwork() == true {
-//            networkErrorView.hidden = true
-//        } else {
-//            print("Internet connection FAILED")
-//            networkErrorView.hidden = false
-//        }
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        movieSearch.showsCancelButton = true
         filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
             })
             self.tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        view.endEditing(true)
+        movieSearch.showsCancelButton = false
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -108,12 +108,23 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         })
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let cell = sender as? MovieCell {
+            let indexPath = self.tableView.indexPathForCell(cell)!.row
+            if segue.identifier == "tableViewSegue" {
+                let vc = segue.destinationViewController as! TableViewMovieDetailsViewController
+                vc.tableFilteredDict = filteredData![indexPath]
+            }
+        }
+   
+    }
+    
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
         let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
-//        let overview = movie["overview"]
         let posterPath = movie["poster_path"] as! String
         let popularity = movie["popularity"] as? Float
         let voterAverage = movie["vote_average"] as? Float
@@ -121,10 +132,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
         let request = NSURLRequest(URL: imageUrl!)
-//        let placeholder = UIImage(named: "clapperboard")
         
         cell.titleLabel.text = title as String
-//        cell.overviewLabel.text = overview as? String
         cell.popularityLabel.text = "Popularity: " + String(format: "%.2f", popularity!)
         cell.voterAvgLabel.text = "Voter Average: " + String(format: "%.2f", voterAverage!)
         
@@ -132,21 +141,25 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             cell.posterView.setImageWithURL(imageUrl!)
         }
         
-        cell.posterView.setImageWithURLRequest(request, placeholderImage: UIImage(named: "clapperboard"), success: { (request, imageResponse, image) -> Void in
+        let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+        
+        cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
             if imageResponse != nil {
                 print("Image was not cached, fade in image")
                 cell.posterView.alpha = 0.0
                 cell.posterView.image = image
-                UIView.animateWithDuration(0.3, animations: {() -> Void in
+                UIView.animateWithDuration(0.10, animations: {() -> Void in
                     cell.posterView.alpha = 1.0
                 })
             } else {
                 print("Image was cached so just update the image")
                 cell.posterView.image = image
             }
-        }) { (imageRequest, imageResponse, error) -> Void in
-            
-        }
+            },
+            failure:  {(imageRequest, imageResponse, error) -> Void in
+                
+                
+        })
         return cell
     }
     

@@ -21,7 +21,6 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
     var delay = 3.0 * Double(NSEC_PER_SEC)
 
     override func viewDidLoad() {
-//        UITabBar.appearance().barTintColor = UIColor.blackColor()
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
@@ -29,10 +28,6 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         PKHUD.sharedHUD.show()
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
-//        
-//        dispatch_after(delayTime, dispatch_get_main_queue()) {
-//            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-//        }
         
         refreshControl = UIRefreshControl()
         toptableView.addSubview(refreshControl)
@@ -72,10 +67,16 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        topMovieSearcher.showsCancelButton = true
         filteredData = searchText.isEmpty ? movies:movies!.filter({(movie:NSDictionary) -> Bool in
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
         })
         self.toptableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        view.endEditing(true)
+        topMovieSearcher.showsCancelButton = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -100,6 +101,18 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
             self.refreshControl.endRefreshing()
         })
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let cell = sender as? TopMovieCell {
+            let indexPath = self.toptableView.indexPathForCell(cell)!.row
+            if segue.identifier == "topTableViewSegue" {
+                let vc = segue.destinationViewController as! MovieDetailsViewController
+                vc.filteredDict = filteredData![indexPath]
+            }
+            
+        }
+    }
+    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -133,17 +146,26 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         if let posterPath = movie["poster_path"] as? String {
             cell.topPosterView.setImageWithURL(imageUrl!)
         }
-
+        
+        let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+        
+        cell.topPosterView.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
+            if imageResponse != nil {
+                print("Image was not cached, fade in image")
+                cell.topPosterView.alpha = 0.0
+                cell.topPosterView.image = image
+                UIView.animateWithDuration(0.10, animations: {() -> Void in
+                    cell.topPosterView.alpha = 1.0
+                })
+            } else {
+                print("Image was cached so just update the image")
+                cell.topPosterView.image = image
+            }
+            },
+            failure:  {(imageRequest, imageResponse, error) -> Void in
+                
+                
+        })
         return cell
     }
-//    
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "topMovieSegue" {
-//            if let indexPath = self.topCollectionView?.indexPathForCell((sender as? TopCollectionCell)!)! {
-//                let detailVC = segue.destinationViewController as! MovieDetailsViewController
-//                
-            }
-//        }
-//    }
-
-//}
+}

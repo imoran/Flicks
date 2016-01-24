@@ -27,6 +27,8 @@ class MovieDetailsViewController: UIViewController, UICollectionViewDelegate {
         let title = filteredDict["title"] as! String
         let overview = filteredDict["overview"] as! String
         
+//        self.overviewLabel.sizeT()
+        
         titleLabel.text = title as String
         overviewLabel.text = overview as String
         

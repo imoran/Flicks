@@ -28,7 +28,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.show()
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
+//        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
         
         refreshControl = UIRefreshControl()
         collectionView.addSubview(refreshControl)
@@ -68,11 +68,16 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        movieSearcher.showsCancelButton = true
         filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
         })
         self.collectionView.reloadData()
 }
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        view.endEditing(true)
+        movieSearcher.showsCancelButton = false
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
