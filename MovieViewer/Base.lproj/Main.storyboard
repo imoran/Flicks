@@ -113,6 +113,10 @@
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="RdV-Ug-Oj2" appends="YES" id="SGp-uV-YmL"/>
+                                </connections>
                             </view>
                         </subviews>
                         <animations/>
@@ -168,6 +172,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="RdV-Ug-Oj2">
+                    <connections>
+                        <action selector="reconnectNetwork:" destination="BYZ-38-t0r" id="J4q-7x-Mn1"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="5237" y="-204"/>
         </scene>
@@ -355,6 +364,10 @@
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="R55-ae-onf" appends="YES" id="4Oi-TJ-rwG"/>
+                                </connections>
                             </view>
                         </subviews>
                         <animations/>
@@ -375,6 +388,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WIX-n3-f5w" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="R55-ae-onf">
+                    <connections>
+                        <action selector="reconnectNetwork:" destination="75p-Jf-8qv" id="WxT-v9-T8r"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="5237" y="511"/>
         </scene>
@@ -386,10 +404,11 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="gbX-zB-IGB">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" indicatorStyle="black" dataMode="prototypes" id="gbX-zB-IGB">
                                 <rect key="frame" x="0.0" y="44" width="320" height="411"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <animations/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="sqt-Tw-MpB">
                                     <size key="itemSize" width="92" height="153"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -416,6 +435,10 @@
                                     </subviews>
                                     <animations/>
                                     <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    <gestureRecognizers/>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="50t-M3-wvH" appends="YES" id="Jv3-dm-wg8"/>
+                                    </connections>
                                 </view>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TopCollectionCell" id="g8a-hi-RP7" customClass="TopCollectionCell" customModule="MovieViewer" customModuleProvider="target">
@@ -456,12 +479,17 @@
                     </view>
                     <navigationItem key="navigationItem" id="FPW-F6-7Ho"/>
                     <connections>
-                        <outlet property="errorView" destination="gbX-zB-IGB" id="H6e-Qc-6Hz"/>
+                        <outlet property="errorView" destination="rB5-3f-IoR" id="VGT-72-t1H"/>
                         <outlet property="topCollectionView" destination="gbX-zB-IGB" id="TDl-O6-QJr"/>
                         <outlet property="topMovieCollectionSearcher" destination="012-XV-vMx" id="TkG-sW-JJW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ayd-Ts-YGL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="50t-M3-wvH">
+                    <connections>
+                        <action selector="reconnectNetwork:" destination="EPr-By-TPS" id="obN-W6-dJg"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="5940" y="785"/>
         </scene>
@@ -477,6 +505,7 @@
                                 <rect key="frame" x="0.0" y="44" width="320" height="411"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <animations/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fZ1-k7-O7i">
                                     <size key="itemSize" width="97" height="155"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -503,6 +532,10 @@
                                     </subviews>
                                     <animations/>
                                     <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    <gestureRecognizers/>
+                                    <connections>
+                                        <outletCollection property="gestureRecognizers" destination="RxE-TH-wrw" appends="YES" id="IO8-29-OMg"/>
+                                    </connections>
                                 </view>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="movieCollection" id="ZT6-5q-yWo" customClass="MovieCollectionViewCell" customModule="MovieViewer" customModuleProvider="target">
@@ -598,6 +631,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="79n-DT-qo2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="RxE-TH-wrw">
+                    <connections>
+                        <action selector="reconnectNetwork:" destination="TOk-Q7-6Z8" id="yrV-vl-nRp"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="5671" y="148"/>
         </scene>
@@ -774,7 +812,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="cLF-QB-udC"/>
-        <segue reference="o5Q-2q-QEi"/>
+        <segue reference="qpz-fT-Xz1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
 </document>

@@ -44,42 +44,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
         movieSearch.delegate = self
         
-        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-        let request = NSURLRequest(URL: url!)
-        let session = NSURLSession(
-            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-            delegate:nil,
-            delegateQueue:NSOperationQueue.mainQueue()
-        )
-        
-        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
-            completionHandler: { (dataOrNil, response, error) in
-                if let data = dataOrNil {
-                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                        data, options:[]) as? NSDictionary {
-                            NSLog("response: \(responseDictionary)")
-                            PKHUD.sharedHUD.hide(afterDelay: 1.5)
-                            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-                            self.movies = responseDictionary["results"] as? [NSDictionary]
-                            self.filteredData = self.movies
-                            self.refreshControl.endRefreshing()
-                            self.tableView.reloadData()
-                            PKHUD.sharedHUD.hide()
-                            PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
-                            PKHUD.sharedHUD.dimsBackground = false
-                            self.errorView.hidden = true
-                      }
-                    } else {
-                        print("error")
-                        self.errorView.hidden = false
-                        PKHUD.sharedHUD.hide()
-                        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
-                        PKHUD.sharedHUD.dimsBackground = false
-
-                }
-        });
-        task.resume()
+        getNetworkData()
         
     }
     
@@ -89,7 +54,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
             })
             self.tableView.reloadData()
-    }
+      }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         view.endEditing(true)
@@ -178,6 +143,54 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
+    func getNetworkData() {
+        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
+        let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let request = NSURLRequest(URL: url!)
+        let session = NSURLSession(
+            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
+            delegate:nil,
+            delegateQueue:NSOperationQueue.mainQueue()
+        )
+        
+        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
+            completionHandler: { (dataOrNil, response, error) in
+                if let data = dataOrNil {
+                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
+                        data, options:[]) as? NSDictionary {
+                            NSLog("response: \(responseDictionary)")
+                            PKHUD.sharedHUD.hide(afterDelay: 1.5)
+                            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
+                            self.movies = responseDictionary["results"] as? [NSDictionary]
+                            self.filteredData = self.movies
+                            self.refreshControl.endRefreshing()
+                            self.tableView.reloadData()
+                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                            PKHUD.sharedHUD.dimsBackground = false
+                            self.errorView.hidden = true
+                    }
+                } else {
+                    print("error")
+                    self.errorView.hidden = false
+                    PKHUD.sharedHUD.hide()
+                    PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                    PKHUD.sharedHUD.dimsBackground = false
+                    
+                }
+        });
+        task.resume()
+        
+    
+    }
+    
+    
+    @IBAction func reconnectNetwork(sender: AnyObject) {
+        
+        getNetworkData()
+    }
+
+
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if let filteredData = filteredData {
