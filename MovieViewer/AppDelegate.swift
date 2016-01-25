@@ -14,15 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
    
-    
-//    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-//        UITabBar.appearance().tintColor = UIColor.blackColor()
-////        UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.lightGrayColor()], forState: .Selected)
-//        
-//        return true
-//    }
-//    
-    
+
     func applicationDidFinishLaunching(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         UITabBar.appearance().tintColor = UIColor.blackColor()

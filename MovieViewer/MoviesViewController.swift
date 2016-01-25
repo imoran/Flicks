@@ -36,7 +36,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.addSubview(refreshControl)
                 
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.backgroundColor = UIColor.blackColor()
 
+        refreshControl.tintColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
+        
         tableView.dataSource = self
         tableView.delegate = self
         movieSearch.delegate = self
@@ -122,6 +125,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
+        
+        var bgColorView = UIView()
+        bgColorView.backgroundColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
+        cell.selectedBackgroundView = bgColorView
         
         let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String

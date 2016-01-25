@@ -22,7 +22,13 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
+//        refreshControl.backgroundColor = UIColor.blackColor()
+
+        
+//        let backImg = UIImage(named: "table")!
+//        UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
+        
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
         PKHUD.sharedHUD.dimsBackground = true
@@ -32,6 +38,8 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.addSubview(refreshControl)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        
+        refreshControl.tintColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
         
         collectionView.dataSource = self
         movieSearcher.delegate = self

@@ -92,7 +92,7 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" id="6jQ-Jc-DBT">
-                                <rect key="frame" x="-5" y="238" width="320" height="37"/>
+                                <rect key="frame" x="0.0" y="209" width="320" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ERROR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1DX-Qi-6qn">
@@ -148,7 +148,7 @@
                             <animations/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         </view>
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="9wt-YO-YpM">
+                        <barButtonItem key="rightBarButtonItem" image="collection" id="9wt-YO-YpM">
                             <connections>
                                 <segue destination="TOk-Q7-6Z8" kind="push" id="6nr-wh-CW5"/>
                             </connections>
@@ -330,7 +330,7 @@
                         <gestureRecognizers/>
                     </view>
                     <navigationItem key="navigationItem" id="T3T-O3-M1s">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="jiI-gd-TSC">
+                        <barButtonItem key="rightBarButtonItem" image="collection" id="jiI-gd-TSC">
                             <connections>
                                 <segue destination="EPr-By-TPS" kind="push" id="d7S-Yv-tgW"/>
                             </connections>
@@ -671,10 +671,11 @@
         <image name="Film" width="32" height="32"/>
         <image name="Movie" width="64" height="64"/>
         <image name="Star" width="32" height="32"/>
+        <image name="collection" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cLF-QB-udC"/>
-        <segue reference="qpz-fT-Xz1"/>
+        <segue reference="bHP-WJ-cfi"/>
+        <segue reference="o5Q-2q-QEi"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
 </document>

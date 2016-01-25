@@ -34,10 +34,16 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
 //            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
 //        }
         
+        let backImg: UIImage = UIImage(named: "table")!
+        UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
+        
         refreshControl = UIRefreshControl()
         topCollectionView.addSubview(refreshControl)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        
+        refreshControl.backgroundColor = UIColor.blackColor()
+        refreshControl.tintColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
         
         topCollectionView.dataSource = self
         topCollectionView.delegate = self

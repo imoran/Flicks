@@ -31,6 +31,8 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         
         refreshControl = UIRefreshControl()
         toptableView.addSubview(refreshControl)
+        refreshControl.backgroundColor = UIColor.blackColor()
+        refreshControl.tintColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
         
         refreshControl.addTarget(self, action: "onRefresh",
         forControlEvents: UIControlEvents.ValueChanged)
@@ -113,20 +115,13 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if let filteredData = filteredData  {
-            return filteredData.count
-        } else {
-            return 0
-        }
-        
-    }
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = toptableView.dequeueReusableCellWithIdentifier("TopMovieCell", forIndexPath: indexPath) as! TopMovieCell
+        
+        var bgColorView = UIView()
+        bgColorView.backgroundColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
+        cell.selectedBackgroundView = bgColorView
         
         let movie =  filteredData[indexPath.row]
         let title = movie["title"] as! String
@@ -166,5 +161,15 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
                 
         })
         return cell
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if let filteredData = filteredData  {
+            return filteredData.count
+        } else {
+            return 0
+        }
+        
     }
 }
