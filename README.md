@@ -1,8 +1,6 @@
-# Project 1 - *Name of App Here*
+<b>MovieViewer</b> is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-**Name of your app** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
-
-Time spent: **X** hours spent in total
+Time spent: ~26 hours spent in total
 
 ## User Stories
 
@@ -15,10 +13,10 @@ The following **required** functionality is complete:
 
 The following **optional** features are implemented:
 
-- [ ] User sees an error message when there's a networking error.
+- [x] User sees an error message when there's a networking error.
 - [x] Movies are displayed using a CollectionView instead of a TableView.
 - [x] User can search for a movie.
-- [ ] All images fade in as they are loading.
+- [x] All images fade in as they are loading.
 - [x] Customize the UI.
 
 The following **additional** features are implemented:
@@ -26,20 +24,22 @@ The following **additional** features are implemented:
 - [x] User can choose between TableView and CollectionView
 - [x] User can also view Top Rated Movies using the TabBarController
 - [x] User could view movie descriptions that are displayed on a separate ViewController
+- [x] Animations for movie descriptions
+- [x] .sizeToFit() used for titles to occupy space needed, and adjustsFontSizeToFitWidth for descriptions to fit the allocated space
 
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-![Walkthrough](MovieDatabaseSimple4.gif)
+![Walkthrough](MovieDatabaseFinal.gif)
  
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
-** Still need to fix the UI, I know it looks awful right now.
 Describe any challenges encountered while building the app.
+I felt that one of the most challenging things about this app was trying to figure out how to properly make the network error function. In order to do so, you must understand how it obtains information from the API, which was something I had to look at for a while. Customizing was also quite difficult, as well as the installing of the CocoaPods. It was a super fun app to build, nonetheless!
 
 ## License
 
