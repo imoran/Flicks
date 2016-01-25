@@ -132,23 +132,23 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
         let request = NSURLRequest(URL: imageUrl!)
+        let placeholderImage = UIImage(named: "placeholder")
+    
         
         cell.titleLabel.text = title as String
-        cell.popularityLabel.text = "Popularity: " + String(format: "%.2f", popularity!)
-        cell.voterAvgLabel.text = "Voter Average: " + String(format: "%.2f", voterAverage!)
-        
-        if let posterPath = movie["poster_path"] as? String {
-            cell.posterView.setImageWithURL(imageUrl!)
-        }
-        
+        cell.titleLabel.adjustsFontSizeToFitWidth = true
+        cell.popularityLabel.text = String(format: "%.2f", popularity!)
+        cell.voterAvgLabel.text = String(format: "%.2f", voterAverage!)
+    
         let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
         
         cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
+            
             if imageResponse != nil {
                 print("Image was not cached, fade in image")
                 cell.posterView.alpha = 0.0
                 cell.posterView.image = image
-                UIView.animateWithDuration(0.10, animations: {() -> Void in
+                UIView.animateWithDuration(0.7, animations: {() -> Void in
                     cell.posterView.alpha = 1.0
                 })
             } else {
@@ -157,7 +157,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             }
             },
             failure:  {(imageRequest, imageResponse, error) -> Void in
-                
+                cell.posterView.image = placeholderImage
                 
         })
         return cell

@@ -29,10 +29,14 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
         
-//        self.theOverviewLabel.sizeToFit()
-
+//         theOverviewLabel.sizeToFit()
+         theOverviewLabel.adjustsFontSizeToFitWidth = true
+        
         theTitleLabel.text = title as String
         theOverviewLabel.text = overview as String
+        theOverviewLabel.adjustsFontSizeToFitWidth = true
+        theTitleLabel.sizeToFit()
+
         
         if let posterPath = tableFilteredDict["poster_path"] as? String {
             largeImage.setImageWithURL(imageUrl!)
@@ -46,7 +50,7 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
      
         if screen {
         UIView.animateWithDuration(1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations:  {
-            self.infoView.transform = CGAffineTransformMakeTranslation(0, 120)
+            self.infoView.transform = CGAffineTransformMakeTranslation(0, 170)
         }, completion: nil)
             screen = false
        } else {

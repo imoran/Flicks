@@ -114,14 +114,31 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
             
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
-        
-        if let posterPath = movie["poster_path"] as? String {
-               cell.topPosterView.setImageWithURL(imageUrl!)
-            }
-            
-            return cell
-        }
+        let placeholderImage = UIImage(named: "placeholder")
 
+        let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+        
+        cell.topPosterView.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
+            
+            if imageResponse != nil {
+                print("Image was not cached, fade in image")
+                cell.topPosterView.alpha = 0.0
+                cell.topPosterView.image = image
+                UIView.animateWithDuration(0.7, animations: {() -> Void in
+                    cell.topPosterView.alpha = 1.0
+                })
+            } else {
+                print("Image was cached so just update the image")
+                cell.topPosterView.image = image
+            }
+            },
+            failure:  {(imageRequest, imageResponse, error) -> Void in
+                cell.topPosterView.image = placeholderImage
+                
+        })
+        return cell
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "topMovieSegue" {
             if let indexPath = self.topCollectionView?.indexPathForCell((sender as? TopCollectionCell)!) {

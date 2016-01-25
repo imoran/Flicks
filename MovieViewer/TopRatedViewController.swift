@@ -137,15 +137,14 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
-//        let request = NSURLRequest(URL: imageUrl!)
+        let request = NSURLRequest(URL: imageUrl!)
+        let placeholderImage = UIImage(named: "placeholder")
         
         cell.topTitleLabel.text = title as String
-        cell.popularityLabel.text = "Popularity: " + String(format: "%.2f%", popularity!)
-        cell.voterAvgLabel.text = "Voter Average: " + String(format: "%.2f", voterAverage!)
-        
-        if let posterPath = movie["poster_path"] as? String {
-            cell.topPosterView.setImageWithURL(imageUrl!)
-        }
+        cell.topTitleLabel.adjustsFontSizeToFitWidth = true
+        cell.popularityLabel.text = String(format: "%.2f%", popularity!)
+        cell.voterAvgLabel.text = String(format: "%.2f", voterAverage!)
+
         
         let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
         
@@ -154,7 +153,7 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
                 print("Image was not cached, fade in image")
                 cell.topPosterView.alpha = 0.0
                 cell.topPosterView.image = image
-                UIView.animateWithDuration(0.10, animations: {() -> Void in
+                UIView.animateWithDuration(0.7, animations: {() -> Void in
                     cell.topPosterView.alpha = 1.0
                 })
             } else {
@@ -163,7 +162,7 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             },
             failure:  {(imageRequest, imageResponse, error) -> Void in
-                
+                cell.topPosterView.image = placeholderImage
                 
         })
         return cell

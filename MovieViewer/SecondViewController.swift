@@ -28,8 +28,6 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.show()
         
-//        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
-        
         refreshControl = UIRefreshControl()
         collectionView.addSubview(refreshControl)
         
@@ -98,16 +96,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
             self.refreshControl.endRefreshing()
         })
     }
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if let filteredData = filteredData {
-            return filteredData.count
-        } else {
-            return 0
-        }
-        
-    }
+
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("movieCollection", forIndexPath: indexPath) as! MovieCollectionViewCell
@@ -117,13 +106,30 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
-                
-        if let posterPath = movie["poster_path"] as? String {
-            cell.posterImage.setImageWithURL(imageUrl!)
-        }
+        let request = NSURLRequest(URL: imageUrl!)
+        let placeholderImage = UIImage(named: "placeholder")
+
+        let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
         
+        cell.posterImage.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
+            
+            if imageResponse != nil {
+                print("Image was not cached, fade in image")
+                cell.posterImage.alpha = 0.0
+                cell.posterImage.image = image
+                UIView.animateWithDuration(0.7, animations: {() -> Void in
+                    cell.posterImage.alpha = 1.0
+                })
+            } else {
+                print("Image was cached so just update the image")
+                cell.posterImage.image = image
+            }
+            },
+            failure:  {(imageRequest, imageResponse, error) -> Void in
+                cell.posterImage.image = placeholderImage
+                
+        })
         return cell
-    
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -136,6 +142,16 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
     }
     
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if let filteredData = filteredData {
+            return filteredData.count
+        } else {
+            return 0
+        }
+        
+    }
     
 }
         

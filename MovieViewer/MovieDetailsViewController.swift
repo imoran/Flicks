@@ -27,10 +27,11 @@ class MovieDetailsViewController: UIViewController, UICollectionViewDelegate {
         let title = filteredDict["title"] as! String
         let overview = filteredDict["overview"] as! String
         
-//        self.overviewLabel.sizeT()
-        
+       
         titleLabel.text = title as String
         overviewLabel.text = overview as String
+        
+        overviewLabel.adjustsFontSizeToFitWidth = true
         
         if let posterPath = filteredDict["poster_path"] as? String {
             topLargeImage.setImageWithURL(imageUrl!)
@@ -51,7 +52,7 @@ class MovieDetailsViewController: UIViewController, UICollectionViewDelegate {
         
         if screen {
             UIView.animateWithDuration(1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations:  {
-                self.informationView.transform = CGAffineTransformMakeTranslation(0, 120)
+                self.informationView.transform = CGAffineTransformMakeTranslation(0, 170)
                 }, completion: nil)
             screen = false
         } else {
