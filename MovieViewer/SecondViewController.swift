@@ -14,6 +14,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
  
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var movieSearcher: UISearchBar!
+    @IBOutlet weak var errorView: UIView!
     
     var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
@@ -22,19 +23,17 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        refreshControl.backgroundColor = UIColor.blackColor()
 
-        
-//        let backImg = UIImage(named: "table")!
-//        UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
+        let backImg: UIImage = UIImage(named: "table")!
+        UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
-        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.show()
         
         refreshControl = UIRefreshControl()
+        
         collectionView.addSubview(refreshControl)
         
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
@@ -61,12 +60,22 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
                             NSLog("response: \(responseDictionary)")
                             PKHUD.sharedHUD.hide(afterDelay: 1.5)
                             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            
+                            self.filteredData = self.movies
+                            self.refreshControl.endRefreshing()
+                            self.collectionView.reloadData()
+                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                            PKHUD.sharedHUD.dimsBackground = false
+                            self.errorView.hidden = true
                     }
-                    self.filteredData = self.movies
-                    self.collectionView.reloadData()
+                } else {
+                    print("error")
+                    self.errorView.hidden = false
+                    PKHUD.sharedHUD.hide()
+                    PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                    PKHUD.sharedHUD.dimsBackground = false
+                    
                 }
         });
         task.resume()
@@ -100,7 +109,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func onRefresh() {
-        delay(2, closure: {
+        delay(1, closure: {
             self.refreshControl.endRefreshing()
         })
     }

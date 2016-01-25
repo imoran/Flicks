@@ -14,6 +14,7 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
     
     @IBOutlet weak var topCollectionView: UICollectionView!
     @IBOutlet weak var topMovieCollectionSearcher: UISearchBar!
+    @IBOutlet weak var errorView: UICollectionView!
     
     var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
@@ -24,16 +25,10 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         super.viewDidLoad()
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
-        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.show()
-        
-//        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
-        
-//        dispatch_after(delayTime, dispatch_get_main_queue()) {
-//            PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-//        }
-        
+    
         let backImg: UIImage = UIImage(named: "table")!
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
         
@@ -66,15 +61,24 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
                             NSLog("response: \(responseDictionary)")
                             PKHUD.sharedHUD.hide(afterDelay: 1.5)
                             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
-
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            
+                            self.filteredData = self.movies
+                            self.refreshControl.endRefreshing()
+                            self.topCollectionView.reloadData()
+                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                            PKHUD.sharedHUD.dimsBackground = false
+                            self.errorView.hidden = true
                     }
-                    self.filteredData = self.movies
-                    self.topCollectionView.reloadData()
+                } else {
+                    print("error")
+                    self.errorView.hidden = false
+                    PKHUD.sharedHUD.hide()
+                    PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                    PKHUD.sharedHUD.dimsBackground = false
+                    
                 }
                 
-
         });
         task.resume()
         
@@ -107,7 +111,7 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
     }
     
     func onRefresh() {
-        delay(2, closure: {
+        delay(1, closure: {
             self.refreshControl.endRefreshing()
         })
     }

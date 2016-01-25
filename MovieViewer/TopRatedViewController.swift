@@ -14,6 +14,7 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @IBOutlet weak var toptableView: UITableView!
     @IBOutlet weak var topMovieSearcher: UISearchBar!
+    @IBOutlet weak var errorView: UIView!
     
     var movies: [NSDictionary]?
     var filteredData: [NSDictionary]!
@@ -23,11 +24,9 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
-        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
         PKHUD.sharedHUD.dimsBackground = true
         PKHUD.sharedHUD.show()
-        
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double (NSEC_PER_SEC)))
         
         refreshControl = UIRefreshControl()
         toptableView.addSubview(refreshControl)
@@ -55,13 +54,26 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            PKHUD.sharedHUD.hide(afterDelay: 2.0)
+                            NSLog("response: \(responseDictionary)")
+                            PKHUD.sharedHUD.hide(afterDelay: 1.5)
                             PKHUD.sharedHUD.contentView = PKHUDSuccessView()
                             self.movies = responseDictionary["results"] as? [NSDictionary]
-                            
-                    }
-                    self.filteredData = self.movies
-                    self.toptableView.reloadData()
+                            self.filteredData = self.movies
+                            self.refreshControl.endRefreshing()
+                            self.toptableView.reloadData()
+                            PKHUD.sharedHUD.hide()
+                            PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                            PKHUD.sharedHUD.dimsBackground = false
+                            self.errorView.hidden = true
+                         }
+                    
+                } else {
+                    print("error")
+                    self.errorView.hidden = false
+                    PKHUD.sharedHUD.hide()
+                    PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
+                    PKHUD.sharedHUD.dimsBackground = false
+            
                 }
         });
         task.resume()
@@ -99,7 +111,7 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func onRefresh() {
-        delay(2, closure: {
+        delay(1, closure: {
             self.refreshControl.endRefreshing()
         })
     }

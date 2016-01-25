@@ -16,7 +16,6 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
     @IBOutlet weak var theOverviewLabel: UILabel!
     
     var tableFilteredDict: NSDictionary!
-//    var tableViewFilteredDict: NSDictionary!
     
     var screen = true
 
@@ -29,15 +28,13 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
         let baseUrl = "http://image.tmdb.org/t/p/w500"
         let imageUrl = NSURL(string: baseUrl + posterPath)
         
-//         theOverviewLabel.sizeToFit()
-         theOverviewLabel.adjustsFontSizeToFitWidth = true
+        theOverviewLabel.adjustsFontSizeToFitWidth = true
         
         theTitleLabel.text = title as String
         theOverviewLabel.text = overview as String
         theOverviewLabel.adjustsFontSizeToFitWidth = true
         theTitleLabel.sizeToFit()
 
-        
         if let posterPath = tableFilteredDict["poster_path"] as? String {
             largeImage.setImageWithURL(imageUrl!)
         }
