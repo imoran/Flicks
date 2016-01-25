@@ -32,6 +32,8 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         let backImg: UIImage = UIImage(named: "table")!
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
         
+         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        
         refreshControl = UIRefreshControl()
         topCollectionView.addSubview(refreshControl)
         
@@ -162,12 +164,11 @@ class TopRatedCollectionViewController: UIViewController, UICollectionViewDataSo
         task.resume()
     }
     
-  
     @IBAction func reconnectNetwork(sender: AnyObject) {
         getNetworkData()
     }
     
-    
+        
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
          if let filteredData = filteredData {
            return filteredData.count

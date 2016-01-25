@@ -23,6 +23,8 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
 
     override func viewDidLoad() {
         
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
         PKHUD.sharedHUD.dimsBackground = true
@@ -177,11 +179,10 @@ class TopRatedViewController: UIViewController, UITableViewDataSource, UITableVi
         task.resume()
     }
     
+    
     @IBAction func reconnectNetwork(sender: AnyObject) {
         getNetworkData()
     }
-
-    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         

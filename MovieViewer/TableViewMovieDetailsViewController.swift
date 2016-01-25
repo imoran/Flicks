@@ -22,6 +22,9 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let backImg: UIImage = UIImage(named: "collection")!
+        UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
+        
         let title = tableFilteredDict["title"] as! String
         let overview = tableFilteredDict["overview"] as! String
         let posterPath = tableFilteredDict["poster_path"] as! String

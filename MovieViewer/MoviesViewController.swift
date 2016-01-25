@@ -23,6 +23,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var movies: [NSDictionary]?
     
     override func viewDidLoad() {
+        
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        
         super.viewDidLoad()
         
          errorView.hidden = true
