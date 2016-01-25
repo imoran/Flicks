@@ -19,13 +19,13 @@ The following **optional** features are implemented:
 - [x] Movies are displayed using a CollectionView instead of a TableView.
 - [x] User can search for a movie.
 - [ ] All images fade in as they are loading.
-- [x] Customize the UI.
+- [ ] Customize the UI.
 
 The following **additional** features are implemented:
 
 - [x] User can choose between TableView and CollectionView
-- [x] User can also view Top Rated Movies using the TabBarController
-- [x] User could view movie descriptions that are displayed on a separate ViewController
+- [x] User can also view Top Rated Movies using the TabView
+
 
 ## Video Walkthrough 
 
