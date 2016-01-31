@@ -12,35 +12,31 @@ import AFNetworking
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    @IBOutlet weak var errorView: UIView!
     @IBOutlet weak var movieSearch: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var networkErrorView: UIView!
     
+    var endpoint: String!
     var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
     let delay = 3.0 * Double(NSEC_PER_SEC)
     var movies: [NSDictionary]?
     
     override func viewDidLoad() {
-        
+        super.viewDidLoad()
+    
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
         
-        super.viewDidLoad()
+        PKHUD.sharedHUD.contentView = PKHUDProgressView()
+        PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
+        PKHUD.sharedHUD.dimsBackground = true
+        PKHUD.sharedHUD.show()
         
-         errorView.hidden = true
-        
-         PKHUD.sharedHUD.contentView = PKHUDProgressView()
-         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
-         PKHUD.sharedHUD.dimsBackground = true
-         PKHUD.sharedHUD.show()
-
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
-                
+        
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         refreshControl.backgroundColor = UIColor.blackColor()
-
+        
         refreshControl.tintColor = UIColor(red: 127/255, green: 255/255, blue: 212/255, alpha: 1)
         
         tableView.dataSource = self
@@ -55,9 +51,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         movieSearch.showsCancelButton = true
         filteredData = searchText.isEmpty ? movies : movies!.filter({ (movie: NSDictionary) -> Bool in
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
-            })
-            self.tableView.reloadData()
-      }
+        })
+        self.tableView.reloadData()
+    }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         view.endEditing(true)
@@ -74,11 +70,11 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func delay(delay:Double, closure:() -> ()) {
         dispatch_after(
-         dispatch_time(
-          DISPATCH_TIME_NOW,
-          Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
     
     func onRefresh() {
@@ -93,12 +89,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             if segue.identifier == "tableViewSegue" {
                 let vc = segue.destinationViewController as! TableViewMovieDetailsViewController
                 vc.tableFilteredDict = filteredData![indexPath]
+                vc.movieID = filteredData![indexPath]["id"]!.integerValue
             }
         }
-   
+        
+        if segue.identifier == "collectionViewSegue" {
+            let vc = segue.destinationViewController as! SecondViewController
+            vc.endpoint = self.endpoint
+        }
+        
     }
     
-
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
@@ -108,24 +109,23 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
-        let posterPath = movie["poster_path"] as! String
+        let posterPath = movie["poster_path"] as? String
         let popularity = movie["popularity"] as? Float
         let voterAverage = movie["vote_average"] as? Float
-        
-        let baseUrl = "http://image.tmdb.org/t/p/w500"
-        let imageUrl = NSURL(string: baseUrl + posterPath)
-        let request = NSURLRequest(URL: imageUrl!)
-        let placeholderImage = UIImage(named: "placeholder")
-    
         
         cell.titleLabel.text = title as String
         cell.titleLabel.adjustsFontSizeToFitWidth = true
         cell.popularityLabel.text = String(format: "%.2f", popularity!)
         cell.voterAvgLabel.text = String(format: "%.2f", voterAverage!)
     
-        let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+        if let posterPath = movie["poster_path"] as? String {
         
-        cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
+         let baseUrl = "http://image.tmdb.org/t/p/w500"
+         let imageUrl = NSURL(string: baseUrl + posterPath)
+         let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+
+
+          cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
             
             if imageResponse != nil {
                 print("Image was not cached, fade in image")
@@ -140,15 +140,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             }
             },
             failure:  {(imageRequest, imageResponse, error) -> Void in
-                cell.posterView.image = placeholderImage
-                
+                cell.posterView.image = UIImage(named: "placeholder")
         })
-        return cell
     }
+        return cell
+   }
     
     func getNetworkData() {
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string:"http://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -171,11 +171,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             PKHUD.sharedHUD.hide()
                             PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
                             PKHUD.sharedHUD.dimsBackground = false
-                            self.errorView.hidden = true
+                      
                     }
                 } else {
                     print("error")
-                    self.errorView.hidden = false
                     PKHUD.sharedHUD.hide()
                     PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
                     PKHUD.sharedHUD.dimsBackground = false
@@ -184,23 +183,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         });
         task.resume()
         
-    
     }
     
-    
-    @IBAction func reconnectNetwork(sender: AnyObject) {
-        
-        getNetworkData()
-    }
-
-
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if let filteredData = filteredData {
             return filteredData.count
         } else {
             return 0
-        
-  }
- }
+            
+        }
+    }
 }

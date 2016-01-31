@@ -11,23 +11,25 @@ import PKHUD
 import AFNetworking
 
 class SecondViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate {
- 
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var movieSearcher: UISearchBar!
-    @IBOutlet weak var errorView: UIView!
     
     var filteredData: [NSDictionary]!
     var refreshControl: UIRefreshControl!
     let delay = 3.0 * Double(NSEC_PER_SEC)
     var movies: [NSDictionary]?
+    var endpoint: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        getNetworkData()
+        
         let backImg: UIImage = UIImage(named: "table")!
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
         
-         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = true
@@ -53,12 +55,12 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
             return (movie["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
         })
         self.collectionView.reloadData()
-}
+    }
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         view.endEditing(true)
         movieSearcher.showsCancelButton = false
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -78,20 +80,21 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
             self.refreshControl.endRefreshing()
         })
     }
-
-
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("movieCollection", forIndexPath: indexPath) as! MovieCollectionViewCell
         let movie = filteredData[indexPath.row]
         let title = movie["title"] as! String
-        let posterPath = movie["poster_path"] as! String
+        let posterPath = movie["poster_path"] as? String
         
-        let baseUrl = "http://image.tmdb.org/t/p/w500"
-        let imageUrl = NSURL(string: baseUrl + posterPath)
-        let request = NSURLRequest(URL: imageUrl!)
-        let placeholderImage = UIImage(named: "placeholder")
 
-        let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
+
+        if let posterPath = movie["poster_path"] as? String {
+            
+            let baseUrl = "http://image.tmdb.org/t/p/w500"
+            let imageUrl = NSURL(string: baseUrl + posterPath)
+            let imageRequest = NSURLRequest(URL: NSURL(string: baseUrl + posterPath)!)
         
         cell.posterImage.setImageWithURLRequest(imageRequest, placeholderImage:  nil, success: {(imageRequest, imageResponse, image) -> Void in
             
@@ -108,11 +111,13 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
             }
             },
             failure:  {(imageRequest, imageResponse, error) -> Void in
-                cell.posterImage.image = placeholderImage
+                cell.posterImage.image = nil
                 
-        })
+         })
+       }
         return cell
     }
+
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "MovieSegue" {
@@ -126,7 +131,7 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func getNetworkData() {
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"http://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string:"http://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -149,11 +154,10 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
                             PKHUD.sharedHUD.hide()
                             PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
                             PKHUD.sharedHUD.dimsBackground = false
-                            self.errorView.hidden = true
+                            
                     }
                 } else {
                     print("error")
-                    self.errorView.hidden = false
                     PKHUD.sharedHUD.hide()
                     PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
                     PKHUD.sharedHUD.dimsBackground = false
@@ -163,11 +167,6 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         task.resume()
     }
     
-    
-    @IBAction func reconnectNetwork(sender: AnyObject) {
-        getNetworkData()
-    }
-    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if let filteredData = filteredData {
@@ -175,8 +174,5 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         } else {
             return 0
         }
-        
     }
-    
 }
-        

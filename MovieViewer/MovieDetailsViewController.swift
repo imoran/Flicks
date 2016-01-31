@@ -52,21 +52,21 @@ class MovieDetailsViewController: UIViewController, UICollectionViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func onTap(sender: AnyObject) {
-        
-        if screen {
-            UIView.animateWithDuration(1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations:  {
-                self.informationView.transform = CGAffineTransformMakeTranslation(0, 170)
-                }, completion: nil)
-            screen = false
-        } else {
-            UIView.animateWithDuration(1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations:  {
-                self.informationView.transform = CGAffineTransformMakeTranslation(0, 0)
-                }, completion: nil)
-            screen = true
-            
-        }
-    }
-        
+//    @IBAction func onTap(sender: AnyObject) {
+//        
+//        if screen {
+//            UIView.animateWithDuration(1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations:  {
+//                self.informationView.transform = CGAffineTransformMakeTranslation(0, 170)
+//                }, completion: nil)
+//            screen = false
+//        } else {
+//            UIView.animateWithDuration(1.5, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [], animations:  {
+//                self.informationView.transform = CGAffineTransformMakeTranslation(0, 0)
+//                }, completion: nil)
+//            screen = true
+//            
+//        }
+//    }
+    
     }
 
