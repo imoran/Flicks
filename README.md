@@ -98,7 +98,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
-This week, I definitely struggled with passing information from one view controller to the next (using a segue). Also, for last weeks' assignment, I created the tab bar controller using the storyboard, so implementing a programmatically-created tab bar was challenging, since I had to backtrack and completely understand everything. 
+This week, I definitely struggled with passing information from one view controller to the next (using a segue). Also, for last weeks' assignment, I created the tab bar controller using the storyboard, so implementing a programmatically-created tab bar was challenging, since I had to backtrack and reimplement everything. 
 
 ## License
 
