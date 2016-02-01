@@ -62,7 +62,7 @@ I felt that one of the most challenging things about this app was trying to figu
 
 <b>MovieViewer</b> is a movies app displaying box office and top rental DVDs using [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **X** hours spent in total
+Time spent: ~15 hours spent in total
 
 ## User Stories
 
