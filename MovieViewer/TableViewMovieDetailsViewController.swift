@@ -15,20 +15,45 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
     @IBOutlet weak var theTitleLabel: UILabel!
     @IBOutlet weak var theOverviewLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var taglineLabel: UILabel!
+    @IBOutlet weak var genreLabel: UILabel!
+    @IBOutlet weak var runtimeLabel: UILabel!
+    @IBOutlet weak var timeIcon: UIImageView!
     
     var tableFilteredDict: NSDictionary!
     var movieID = 0;
-    var movie: NSDictionary!
-    
-    func populateFields() {
-        
-    }
-   
+    var movie: NSDictionary?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        func populateData() {
+            var genres = [""]
+            genres.removeAll()
+            if movie == movie {
+                
+            if let movieRuntime = movie!["runtime"]!.integerValue {
+                runtimeLabel.text = "\(movieRuntime)" + " minutes"
+            } else {
+                timeIcon.hidden = true
+                runtimeLabel.text = "No runtime info avail."
+            }
+             
+            if let tagline = movie!["tagline"] as? String {
+                taglineLabel.text = tagline
+                taglineLabel.adjustsFontSizeToFitWidth = true
+            } else {
+                taglineLabel.text = "No tagline info avail."
+            }
+            
+            for genre in (movie!["genres"] as? [NSDictionary])! {
+                genres.append(genre["name"] as! String)
+            }
+                genreLabel.text = genres.joinWithSeparator(", ")
+            }
+        }
     
-        // call an api
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"http://api.themoviedb.org/3/movie/\(movieID)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
@@ -45,8 +70,8 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
                         data, options:[]) as? NSDictionary {
                             NSLog("response: \(responseDictionary)")
                             self.movie = responseDictionary
-                            self.populateFields()
-                   
+                            populateData()
+
                     }
                 } else {
                     print("error")
@@ -55,7 +80,7 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
                 }
         });
         task.resume()
-
+        
         
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.size.height)
         
@@ -66,23 +91,12 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
         let overview = tableFilteredDict["overview"] as! String
         let date = tableFilteredDict["release_date"] as! String
         let dateMod = date.componentsSeparatedByString("-")
-        var year: String = dateMod[0]
-        
+        let year: String = dateMod[0]
         
         theTitleLabel.text = String(title + " (" + year + ")")
-
-        theOverviewLabel.text = overview as String
-        
+        theOverviewLabel.text = "Synopsis: \n" + overview as String
         theTitleLabel.sizeToFit()
         theOverviewLabel.sizeToFit()
-        
-//        let smallImageRequest = NSURLRequest(URL: NSURL(string:low_resolution + posterPath)!)
-//        let largeImageRequest = NSURLRequest(URL: NSURL(string: high_resolution + posterPath)!)
-
-        
-//        if let posterPath = tableFilteredDict["poster_path"] as? String {
-//            largeImage.setImageWithURL(imageUrl!)
-//        }
         
         if let posterPath = tableFilteredDict["poster_path"] as? String {
             let baseUrl = "http://image.tmdb.org/t/p/w500"
@@ -97,8 +111,6 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
              placeholderImage: nil,
              success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
                 
-                // smallImageResponse will be nil if the smallImage is already available
-                // in cache (might want to do something smarter in that case).
                 self.largeImage.alpha = 0.0
                 self.largeImage.image = smallImage;
                 
@@ -108,8 +120,6 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
                     
                     }, completion: { (sucess) -> Void in
                         
-                        // The AFNetworking ImageView Category only allows one request to be sent at a time
-                        // per ImageView. This code must be in the completion block.
                         self.largeImage.setImageWithURLRequest(
                             largeImageRequest,
                             placeholderImage: smallImage,
@@ -120,17 +130,20 @@ class TableViewMovieDetailsViewController: UIViewController , UICollectionViewDe
                             },
                             failure: { (request, response, error) -> Void in
                                 self.largeImage.image = UIImage(named: "placeholder")
-                                // do something for the failure condition of the large image request
-                                // possibly setting the ImageView's image to a default image
+                          
                         })
                 })
             },
             failure: { (request, response, error) -> Void in
-                // do something for the failure condition
-                // possibly try to get the large image
+               
         })
         
-    }
-    
-  }
+     }
+   }
+
 }
+    
+
+
+
+

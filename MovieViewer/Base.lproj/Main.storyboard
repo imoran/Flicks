@@ -93,6 +93,27 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view alpha="0.90000000000000002" contentMode="scaleToFill" id="p1g-kk-CwF">
+                                <rect key="frame" x="0.0" y="42" width="320" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   Network Error" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="o1k-G7-DE9">
+                                        <rect key="frame" x="8" y="5" width="304" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="alert" id="KQf-iZ-dRO">
+                                        <rect key="frame" x="83" y="5" width="24" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <animations/>
+                                    </imageView>
+                                </subviews>
+                                <animations/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -141,6 +162,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="errorView" destination="p1g-kk-CwF" id="HTS-gQ-clq"/>
                         <outlet property="movieSearch" destination="PvV-LH-mVM" id="pA7-Wx-beT"/>
                         <outlet property="tableView" destination="erz-SV-ezh" id="IMs-Y2-WOI"/>
                     </connections>
@@ -254,7 +276,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="79n-DT-qo2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6869" y="-167"/>
+            <point key="canvasLocation" x="6769" y="235"/>
         </scene>
         <!--Table View Movie Details View Controller-->
         <scene sceneID="TWF-uS-8pg">
@@ -275,13 +297,14 @@
                                         <gestureRecognizers/>
                                     </imageView>
                                     <view alpha="0.90000000000000002" contentMode="scaleToFill" id="H2t-E1-zTG">
-                                        <rect key="frame" x="0.0" y="456" width="320" height="286"/>
+                                        <rect key="frame" x="0.0" y="456" width="320" height="328"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aSC-Bi-mxj">
                                                 <rect key="frame" x="8" y="8" width="304" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <animations/>
+                                                <gestureRecognizers/>
                                                 <attributedString key="attributedText">
                                                     <fragment content="Title">
                                                         <attributes>
@@ -292,12 +315,44 @@
                                                     </fragment>
                                                 </attributedString>
                                                 <nil key="highlightedColor"/>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="HOO-Lw-Ecz" appends="YES" id="6mM-ee-3AP"/>
+                                                </connections>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Overview" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="B5D-dM-qri">
-                                                <rect key="frame" x="8" y="56" width="304" height="19"/>
+                                                <rect key="frame" x="8" y="113" width="304" height="19"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <animations/>
-                                                <fontDescription key="fontDescription" name="LucidaGrande" family="Lucida Grande" pointSize="16"/>
+                                                <fontDescription key="fontDescription" name="LucidaGrande" family="Lucida Grande" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Genre" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9rJ-ZX-CS5">
+                                                <rect key="frame" x="8" y="76" width="304" height="19"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <animations/>
+                                                <fontDescription key="fontDescription" name="LucidaGrande" family="Lucida Grande" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Runtime" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dA6-u1-Y1S">
+                                                <rect key="frame" x="8" y="96" width="304" height="19"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <animations/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Time" id="JkI-Uz-qaI">
+                                                <rect key="frame" x="198" y="98" width="16" height="16"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <animations/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tagline" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KXA-OZ-tbD">
+                                                <rect key="frame" x="8" y="50" width="304" height="26"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <animations/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -317,14 +372,19 @@
                         <nil key="title"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="genreLabel" destination="9rJ-ZX-CS5" id="xE2-S6-vaP"/>
                         <outlet property="infoView" destination="H2t-E1-zTG" id="x8B-GQ-OwV"/>
                         <outlet property="largeImage" destination="cQH-Tf-hrc" id="k6t-mw-qMn"/>
+                        <outlet property="runtimeLabel" destination="dA6-u1-Y1S" id="D2Z-KY-FCz"/>
                         <outlet property="scrollView" destination="eJq-Gk-f0e" id="FIB-ob-Ezy"/>
+                        <outlet property="taglineLabel" destination="KXA-OZ-tbD" id="Bxz-Qs-P1t"/>
                         <outlet property="theOverviewLabel" destination="B5D-dM-qri" id="Qzw-kh-3nV"/>
                         <outlet property="theTitleLabel" destination="aSC-Bi-mxj" id="WIT-Wh-65D"/>
+                        <outlet property="timeIcon" destination="JkI-Uz-qaI" id="so4-pV-61i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="udl-3c-zIo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="HOO-Lw-Ecz"/>
             </objects>
             <point key="canvasLocation" x="7214" y="-167"/>
         </scene>
@@ -352,6 +412,7 @@
     </scenes>
     <resources>
         <image name="Movie" width="64" height="64"/>
+        <image name="Time" width="24" height="24"/>
         <image name="alert" width="240" height="240"/>
         <image name="collection" width="32" height="32"/>
     </resources>

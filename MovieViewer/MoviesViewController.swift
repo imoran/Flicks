@@ -14,6 +14,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var movieSearch: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var errorView: UIView!
     
     var endpoint: String!
     var filteredData: [NSDictionary]!
@@ -24,6 +25,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        errorView.hidden = true
+        
+         self.movieSearch.keyboardAppearance = UIKeyboardAppearance.Dark
+        
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
@@ -170,14 +175,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             self.tableView.reloadData()
                             PKHUD.sharedHUD.hide()
                             PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
-                            PKHUD.sharedHUD.dimsBackground = false
+                            PKHUD.sharedHUD.dimsBackground = true
+                            self.errorView.hidden = true
                       
                     }
                 } else {
                     print("error")
+                    self.errorView.hidden = false
                     PKHUD.sharedHUD.hide()
                     PKHUD.sharedHUD.userInteractionOnUnderlyingViewsEnabled = false
                     PKHUD.sharedHUD.dimsBackground = false
+                    self.tableView.reloadData()
                     
                 }
         });

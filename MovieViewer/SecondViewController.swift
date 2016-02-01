@@ -29,6 +29,8 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         let backImg: UIImage = UIImage(named: "table")!
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(backImg, forState: .Normal, barMetrics: .Default)
         
+        self.movieSearcher.keyboardAppearance = UIKeyboardAppearance.Dark
+        
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
         
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
@@ -123,8 +125,9 @@ class SecondViewController: UIViewController, UICollectionViewDataSource, UIColl
         if segue.identifier == "MovieSegue" {
             if let indexPath = self.collectionView?.indexPathForCell((sender as? MovieCollectionViewCell)!) {
                 let detailVC = segue.destinationViewController as! TableViewMovieDetailsViewController
-                detailVC.tableFilteredDict = self.filteredData[indexPath.row]
-                
+                detailVC.tableFilteredDict = filteredData![indexPath.row]
+                detailVC.movieID = filteredData![indexPath.row]["id"]!.integerValue
+        
             }
         }
     }

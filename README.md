@@ -79,7 +79,8 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] User can choose between TableView and CollectionView
+- [x] User can see more movie details - such as genre, runtime, and taglines (if available)
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
@@ -90,13 +91,14 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-![Walkthrough](MovieDatabase5.gif)
+![Walkthrough](MovieDatabase6.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
 Describe any challenges encountered while building the app.
+This week, I definitely struggled with passing information from one view controller to the next (using a segue). Also, for last weeks' assignment, I created the tab bar controller using the storyboard, so implementing a programmatically-created tab bar was challenging, since I had to backtrack and completely understand everything. 
 
 ## License
 
