@@ -38,7 +38,6 @@ Here's a walkthrough of implemented user stories:
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
-Describe any challenges encountered while building the app.
 I felt that one of the most challenging things about this app was trying to figure out how to properly make the network error function. In order to do so, you must understand how it obtains information from the API, which was something I had to look at for a while. Customizing was also quite difficult, as well as the installing of the CocoaPods. It was a super fun app to build, nonetheless!
 
 ## License
@@ -93,7 +92,6 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
 This week, I definitely struggled with passing information from one view controller to the next (using a segue). Also, for last weeks' assignment, I created the tab bar controller using the storyboard, so implementing a programmatically-created tab bar was challenging, since I had to backtrack and reimplement everything. 
 
 ## License
