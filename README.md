@@ -82,10 +82,6 @@ The following **additional** features are implemented:
 - [x] User can choose between TableView and CollectionView
 - [x] User can see more movie details - such as genre, runtime, and taglines (if available)
 
-Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
-
-1. Customization of the CollectionView/App 
-2. How to use same ViewControllers for Collection and TableView options.
 
 ## Video Walkthrough 
 
